@@ -49,5 +49,61 @@ public:
 		New_Edge.Edge = Temp_Edge;
 		Table[Temp_Source_ID].Dest.push_back(New_Edge);
 	}
+	void Delete_Edge(TVertex Temp_Source, TVertex Temp_Dest) // удаление ребра
+	{
+		int Temp_Source_ID = Index(Temp_Source);
+		int Temp_Dest_ID = Index(Temp_Dest);
+		if (Temp_Source_ID * Temp_Dest_ID < 0)  throw "Edge does not exist"; 
+		for (int i = 0; i < Table[Temp_Source_ID].Dest.size(); i++)
+		{
+			if (Table[Temp_Source_ID].Dest[i].ID == Temp_Dest_ID)
+			{
+				for (int j = i; j < Table[Temp_Source_ID].Dest.size() - 1; j++)
+				{
+					Table[Temp_Source_ID].Dest[i] = Table[Temp_Source_ID].Dest[i + 1];
+					Table[Temp_Source_ID].Dest[i].ID--;
+				}
+				Table[Temp_Source_ID].Dest.pop_back();
+			}
+		}
+	}
+	void Delete_Vertex(TVertex Temp_Source) // удаление вершины
+	{
+		int index = Index(Temp_Source);
+		for (int i = 0; i < index; i++)
+		{
+			for (int j = 0; j < Table[i].Dest.size(); j++)
+			{
+				if (Table[i].Dest[j].Des == index)
+				{
+					for (int k = j; k < Table[i].Dest.size() - 1; k++)
+					{
+						Table[i].Dest[k].Dest = Table[i].Dest[k + 1].Dest;
+					}
+					Table[i].Dest.pop_back();
+				}
+			}
+		}
+		for (int i = index + 1; i < Table.size(); i++)
+		{
+			for (int j = 0; j < Table[i].Dest.size(); j++)
+			{
+				if (Table[i].Dest[j].Dest == index)
+				{
+					for (int k = j; k < Table[i].Dest.size() - 1; k++)
+					{
+						Table[i].Dest[k].Dest = Table[i].Dest[k + 1].Dest;
+					}
+					Table[i].Dest.pop_back();
+				}
+			}
+		}
+		for (int i = index; i < Table.size() - 1; i++)
+		{
+			Table[i] = Table[i + 1];
+			Table[i].ID--;
+		}
+		Table.pop_back();
+	}
 };
 
