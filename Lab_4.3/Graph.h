@@ -16,6 +16,7 @@ private:
 		int ID;
 		TVertex First;
 		std::vector<Destination> Dest;
+		bool colour;
 	};
 	std::vector<Vertex> Table;
 	int Index(TVertex Temp_Vertex) // проверка, есть ли вершина с таким ID в графе
@@ -57,7 +58,7 @@ public:
 		if (Temp_Source_ID * Temp_Dest_ID < 0)  throw "Edge does not exist"; 
 		for (size_t i = 0; i < Table[Temp_Source_ID].Dest.size(); i++)
 		{
-			if (Table[Temp_Source_ID].Dest[i].ID == Temp_Dest_ID)
+			if (Table[Temp_Source_ID].Dest[i].Dest == Temp_Dest_ID)
 			{
 				for (int j = i; j < Table[Temp_Source_ID].Dest.size() - 1; j++)
 				{
@@ -155,6 +156,28 @@ public:
 			else std::cout << std::endl << Temp_Source << "->" << i + 1 << "=" << d[i];
 		}
 	}
-	
+	void Breadth_Search(TVertex Temp_Source)
+	{
+		for (size_t i=0; i<Table.size();i++) 
+		{
+			Table[i].colour = false;
+		}
+		std::queue<Vertex> q;
+		Vertex s = Table[Index(Temp_Source)];
+		q.push(s);
+		s.colour = true;
+		while (!q.empty()) {
+			Vertex u = q.front();
+			q.pop();
+			for (auto elem : u.Dest) {
+				Vertex& v = Table[elem.Dest];
+				if (v.colour == false) {
+					v.colour = true;
+					q.push(v);
+				}
+			}
+			std::cout << u.First;
+		}
+	}
 };
 
