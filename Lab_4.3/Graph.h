@@ -1,4 +1,4 @@
-#include <queue>
+п»ї#include <queue>
 #include<vector>
 #include <iostream>
 
@@ -6,12 +6,14 @@ template<typename TVertex, typename TEdge>
 class Graph
 {
 private:
+	
+public:
 	struct Destination
 	{
 		TVertex Dest;
 		TEdge Edge;
 	};
-	struct Vertex 
+	struct Vertex
 	{
 		int ID;
 		TVertex First;
@@ -19,7 +21,7 @@ private:
 		bool colour;
 	};
 	std::vector<Vertex> Table;
-	int Index(TVertex Temp_Vertex) // проверка, есть ли вершина с таким ID в графе
+	int Index(TVertex Temp_Vertex) // РїСЂРѕРІРµСЂРєР°, РµСЃС‚СЊ Р»Рё РІРµСЂС€РёРЅР° СЃ С‚Р°РєРёРј ID РІ РіСЂР°С„Рµ
 	{
 		for (size_t i = 0; i < Table.size(); i++)
 		{
@@ -27,8 +29,11 @@ private:
 		}
 		return -1;
 	}
-public:
-	void Add_Vertex(TVertex Temp_Source) // добавить вершину
+	TVertex Get(TVertex Temp_Source)
+	{
+		return Table[Index(Temp_Source)].First;
+	}
+	void Add_Vertex(TVertex Temp_Source) // РґРѕР±Р°РІРёС‚СЊ РІРµСЂС€РёРЅСѓ
 	{
 		if (Index(Temp_Source) < 0)
 		{
@@ -36,11 +41,10 @@ public:
 			New_Vertex.ID = Table.size();
 			New_Vertex.First = Temp_Source;
 			Table.push_back(New_Vertex);
-			
 		}
 		else throw "This vertex already exist";
 	}
-	void Add_Edge(TVertex Temp_Source, TVertex Temp_Dest, TEdge Temp_Edge) // добавить ребро
+	void Add_Edge(TVertex Temp_Source, TVertex Temp_Dest, TEdge Temp_Edge) // РґРѕР±Р°РІРёС‚СЊ СЂРµР±СЂРѕ
 	{
 		int Temp_Source_ID = Index(Temp_Source);
 		int Temp_Dest_ID = Index(Temp_Dest);
@@ -51,7 +55,7 @@ public:
 		New_Edge.Edge = Temp_Edge;
 		Table[Temp_Source_ID].Dest.push_back(New_Edge);
 	}
-	void Delete_Edge(TVertex Temp_Source, TVertex Temp_Dest) // удаление ребра
+	void Delete_Edge(TVertex Temp_Source, TVertex Temp_Dest) // СѓРґР°Р»РµРЅРёРµ СЂРµР±СЂР°
 	{
 		int Temp_Source_ID = Index(Temp_Source);
 		int Temp_Dest_ID = Index(Temp_Dest);
@@ -63,13 +67,13 @@ public:
 				for (int j = i; j < Table[Temp_Source_ID].Dest.size() - 1; j++)
 				{
 					Table[Temp_Source_ID].Dest[i] = Table[Temp_Source_ID].Dest[i + 1];
-					Table[Temp_Source_ID].Dest[i].ID--;
+					//Table[Temp_Source_ID].Dest[i].ID--;
 				}
 				Table[Temp_Source_ID].Dest.pop_back();
 			}
 		}
 	}
-	void Delete_Vertex(TVertex Temp_Source) // удаление вершины
+	void Delete_Vertex(TVertex Temp_Source) // СѓРґР°Р»РµРЅРёРµ РІРµСЂС€РёРЅС‹
 	{
 		int index = Index(Temp_Source);
 		if (index < 0) throw "Vertex does not exist";
@@ -118,9 +122,9 @@ public:
 		{
 			for (size_t j = 0; j < Table[i].Dest.size(); j++)
 			{
-				if (d[i] + Table[i].Dest[j].Edge < d[Table[i].Dest[j].Dest])
+				if (d[i] + static_cast<double>(Table[i].Dest[j].Edge) < d[Table[i].Dest[j].Dest])
 				{
-					d[Table[i].Dest[j].Dest] = d[i] + Table[i].Dest[j].Edge;
+					d[Table[i].Dest[j].Dest] = static_cast<double>(Table[i].Dest[j].Edge);
 					Ways[Table[i].Dest[j].Dest] = Ways[i];
 					Ways[Table[i].Dest[j].Dest].push_back(Table[i].ID + 1);
 				}
